@@ -1,0 +1,99 @@
+import os
+import socket
+import threading
+
+users = {
+    "admin": {"password": "adminpass", "banned": False},
+}
+
+def authenticate_user(username, password):
+    if username in users and not users[username]["banned"]:
+        return users[username]["password"] == password
+    return False
+def handle_user_command(conn, username):
+    if username in users and not users[username]["banned"]:
+        conn.send(b"331 User name okay, need password.\n")
+        return username
+    conn.send(b"530 User not found or banned.\n")
+    return None
+def handle_pass_command(conn, username, password):
+    if authenticate_user(username, password):
+        conn.send(b"230 User logged in, proceed.\n")
+        return True
+    conn.send(b"530 Not logged in.\n")
+    return False
+def handle_list_command(conn):
+    files = os.listdir('.')
+    conn.sendall('\n'.join(files[:100]).encode() + b"\n")  
+def handle_retr_command(conn, filename):
+    if os.path.exists(filename):
+        with open(filename, 'rb') as f:
+            conn.sendfile(f)
+    else:
+        conn.send(b"550 File not found.\n")
+def handle_stor_command(conn, filename):
+    with open(filename, 'wb') as f:
+        while True:
+            data = conn.recv(1024)
+            if not data:
+                break
+            f.write(data)
+    conn.send(b"226 Transfer complete.\n")
+
+def handle_client(conn, addr):
+    print(f"Connection from {addr} has been established.")
+    conn.send(b"220 Welcome to the FTP server.\n")
+    
+    authenticated = False
+    current_user = None
+    
+    while True:
+        data = conn.recv(1024).decode().strip()
+        if not data:
+            break
+        command, *args = data.split()
+        
+        if command.upper() == "USER":
+            current_user = handle_user_command(conn, args[0])
+        
+        elif command.upper() == "PASS":
+            if current_user:
+                authenticated = handle_pass_command(conn, current_user, args[0])
+            else:
+                conn.send(b"503 Bad sequence of commands.\n")
+        
+        elif command.upper() == "LIST" and authenticated:
+            handle_list_command(conn)
+        
+        elif command.upper() == "RETR" and authenticated:
+            if args:
+                handle_retr_command(conn, args[0])
+            else:
+                conn.send(b"501 Syntax error in parameters or arguments.\n")
+        
+        elif command.upper() == "STOR" and authenticated:
+            if args:
+                handle_stor_command(conn, args[0])
+            else:
+                conn.send(b"501 Syntax error in parameters or arguments.\n")
+        
+        elif command.upper() == "QUIT":
+            conn.send(b"221 Service closing control connection.\n")
+            break
+        
+        else:
+            conn.send(b"500 Syntax error, command unrecognized.\n")
+
+def start_ftp_server():
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind(('localhost', 9999))
+    server.listen(5)
+    print("FTP server is listening on localhost:9999")
+
+    while True:
+        conn, addr = server.accept()
+        threading.Thread(target=handle_client, args=(conn, addr)).start()
+
+if __name__ == "__main__":
+    start_ftp_server()
+
