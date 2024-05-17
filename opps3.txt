@@ -1,0 +1,126 @@
+ #include <iostream>
+ using namespace std;
+ public class BankAccountHolder
+ (
+    char* name;
+    char* username;
+    char* netbankingpassword;
+    int listofaccounts;
+    BankAccountHolder BranchManager;
+    getStatementOfAccount(char* name;)
+    {
+        cin<<"Enter the account name whose statements are required"<<name;
+        cout<<"Current Balance"<<balance;
+        cout<<"Transaction history";
+    }
+    getAccountHolders(int listofaccounts)
+    {
+        cout <<"NAME\nACCOUNT NUMBER";
+        for(i=1;i<=n;i++)
+        cout <<name<<accno;
+    }
+    fastforward()
+{
+    if
+    balance=balance+(interestrate/100.0)*balance;
+}
+    getAccounts();
+    changepassword(char* password)
+    {
+        cout << "Enter your previous password"<<netbankingpassword;
+        cout <<"Enter your new changed password"<< password;
+        netbankingpassword=password;
+        cout<< "Password Changed";
+        
+    }
+    createAccount(char* name,char* username,)
+    {
+        cout<< "Enter the name of Bank Account Holder"<<name;
+        cout<< "Enter the bank account username"<<username;
+        cout<<"Account is created.";
+
+    }
+
+ )
+ public class BankAccount
+ {
+    long accno;
+    double balance;
+    char* opendate;
+    char* transactiontype;
+    double deposit,withdraw,transfer;
+    
+    deposit(double amt)
+    {
+        cin>>"Enter the amount you want to deposit"<<amt;
+        balance=balance+amt;
+        cout<<"Amount deposited.";
+
+    }
+    withdraw(double amt)
+    {
+        cin>>"Enter the amount you want to withdraw"<<amt;
+        balance=balance-amt;
+        cout<<"Amount withdrawn.";
+
+    }
+    transfer(double amt)
+    {
+        cin>>"Enter the amount you want to transfer"<<amt;
+        balance=balance-amt;
+        cout<<"Amount transferred.";
+
+    }
+ }
+ protected class SavingsAccount extends BankAccount
+ {double interestrate;
+ getInterestRate(double interest)
+ {
+cout<<"Enter the  non-zero interest rate of bank"<<interest<<"%";
+interestrate=interest;
+ }
+ 
+ setInterestRate()
+ { getInterestRate(double interest)
+    if(interest>6.0)
+    interestrate=6.0;
+ }
+ }
+ protected class CheckingAccount extends BankAccount
+ {double interestrate;
+ getInterestRate();
+ 
+ }
+int main()
+{char C;
+    cin<<"Enter name"<< name;
+    cin<<"Enter username"<< username;
+    createAccount(name,username);
+    cin<<"Enter the new password"<<password;
+    changePassword(); int listofaccounts;
+    cin<<"Enter list of accounts"<<listofaccounts;double amt;
+    getStatementOfAccount(name);
+    getAccountHolders( listofaccounts);
+    fatforward();
+    
+    do {
+        cin<<"Type W for withdrawal \n Type T for transferring to another bank\n Type D for depositing \n Type C for closing account"<<C;
+    switch C:
+  case 'D':
+  cin<<"Enter the amount to be deposited"<<amt;
+  deposit(amt);
+  break;
+  case 'T':
+  cin<<"Enter the amount to be transferred to:"<<amt;
+  transfer(amt);
+  break;
+  case 'W':
+  cin<<"Enter the amount to be withdrawn"<<amt;
+  withdraw(amt);
+  break;
+  case'C ':
+  return 0;
+
+}while(C=='C');
+return 0;
+
