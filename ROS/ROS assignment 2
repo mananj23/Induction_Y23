@@ -1,1 +1,26 @@
+# excercise 2
+- I first downloaded the smb_highlevel_controller zip file from the course website.
+- After that I inspected :
+cd ~/Downloads
+unzip smb_highlevel_controller.zip
+cd smb_highlevel_controller
+cat CMakeLists.txt
+cat package.xml
+- Created a subscriber to the /scan topic :
+nano smb_highlevel_controller_node.cpp
+- then i coded the following :
+#include <ros/ros.h>
+#include <sensor_msgs/LaserScan.h>
+void scanCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
+{
+  ROS_INFO("Received a LaserScan message with %lu ranges", msg->ranges.size());
+}
 
+int main(int argc, char **argv)
+{
+  ros::init(argc, argv, "smb_highlevel_controller_node");
+  ros::NodeHandle nh;
+  ros::Subscriber sub = nh.subscribe("scan", 1000, scanCallback);
+  ros::spin();
+  return 0;
+}
